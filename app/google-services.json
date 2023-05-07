@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "36471980188",
+    "project_id": "boardbuddies-d1bec",
+    "storage_bucket": "boardbuddies-d1bec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36471980188:android:fb0bf345a3b20a24a1ed59",
+        "android_client_info": {
+          "package_name": "pro.tariyal.boardbuddies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "36471980188-4hs2lt0h32irrj61cpu14rmrbm8e16j6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGIs6aY6vdvtIUx_B1k24ywq88WBJPBb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "36471980188-4hs2lt0h32irrj61cpu14rmrbm8e16j6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
