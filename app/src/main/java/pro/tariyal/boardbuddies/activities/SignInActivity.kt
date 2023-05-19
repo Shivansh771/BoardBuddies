@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import pro.tariyal.boardbuddies.R
+import pro.tariyal.boardbuddies.activities.firebase.FirestoreClass
 import pro.tariyal.boardbuddies.activities.models.User
 import pro.tariyal.boardbuddies.databinding.ActivitySignInBinding
 
@@ -31,10 +32,10 @@ class SignInActivity : BaseActivity() {
         }
 
     }
-    fun signInSuccess(user:User){
+    fun signInSuccess(){
         hideProgressDialog()
         startActivity(Intent(this,MainActivity::class.java))
-        finish()
+        this.finish()
     }
     private fun setUpActionBar(){
         setSupportActionBar(toolbar)
@@ -52,14 +53,12 @@ class SignInActivity : BaseActivity() {
         val email: String=binding.etEmail.text.toString().trim{it<=' '}
         val password:String=binding.etPassword.text.toString().trim{it<=' ' }
         if(validateForm(email,password)){
-            showCustomProgressDialog(resources.getString(R.string.please_wait))
+            showProgressDialog(resources.getString(R.string.please_wait))
             auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this){task->
                 hideProgressDialog()
                 if(task.isSuccessful){
                     Log.d(TAG,"signInWithEmail:success")
-                    val user=auth.currentUser
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    FirestoreClass().signInUser(this@SignInActivity)
                 }
                 else{
                     Log.w(TAG,"signinWithEmail:Failure",task.exception)
