@@ -1,16 +1,14 @@
 package pro.tariyal.boardbuddies.activities
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import pro.tariyal.boardbuddies.R
+import pro.tariyal.boardbuddies.activities.firebase.FirestoreClass
 import pro.tariyal.boardbuddies.activities.models.User
 import pro.tariyal.boardbuddies.databinding.ActivitySignInBinding
 
@@ -27,7 +25,7 @@ class SignInActivity : BaseActivity() {
         setUpActionBar()
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         binding.btnSignIn.setOnClickListener{
-            signInUser()
+            signInRegisteredUser()
         }
 
     }
@@ -48,26 +46,30 @@ class SignInActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener{onBackPressed()}
 
     }
-    private fun signInUser(){
-        val email: String=binding.etEmail.text.toString().trim{it<=' '}
-        val password:String=binding.etPassword.text.toString().trim{it<=' ' }
-        if(validateForm(email,password)){
-            showProgressDialog()
-            auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this){task->
-                hideProgressDialog()
-                if(task.isSuccessful){
-                    Log.d(TAG,"signInWithEmail:success")
-                    val user=auth.currentUser
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                }
-                else{
-                    Log.w(TAG,"signinWithEmail:Failure",task.exception)
-                    Toast.makeText(baseContext,"Authentication failed.",Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+    private fun signInRegisteredUser() {
+        // Here we get the text from editText and trim the space
+        val email: String = binding.etEmail.text.toString().trim { it <= ' ' }
+        val password: String = binding.etPassword.text.toString().trim { it <= ' ' }
 
+        if (validateForm(email, password)) {
+            // Show the progress dialog.
+            showProgressDialog()
+
+            // Sign-In using FirebaseAuth
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Calling the FirestoreClass signInUser function to get the data of user from database.
+                        FirestoreClass().loadUserData(this@SignInActivity)
+                    } else {
+                        Toast.makeText(
+                            this@SignInActivity,
+                            task.exception!!.message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+        }
     }
     private fun validateForm(email:String,password:String) : Boolean{
         return when{
